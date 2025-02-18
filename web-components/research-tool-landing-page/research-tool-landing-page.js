@@ -1,4 +1,4 @@
-export class DefaultController {
+export class DefaultPresenter {
     constructor(element, invalidate) {
         this.element = element;
         this.invalidate = invalidate;
