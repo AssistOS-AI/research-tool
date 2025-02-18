@@ -1,4 +1,4 @@
-const NAME = "research-tool";
+const NAME = "`research-tool-landing-page`";
 
 export class RoutingService {
     constructor() {
