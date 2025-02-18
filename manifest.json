@@ -2,13 +2,13 @@
     "applicationName": "research-tool",
     "version": "1.0.0",
     "encodedSvgIcon": "CiAgICA8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjIwMCIgaGVpZ2h0PSIxMDAiPgogICAgICAgIDxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IndoaXRlIi8+CiAgICAgICAgPHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtc2l6ZT0iMjAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9ImJsYWNrIiBkeT0iLjNlbSI+cmVzZWFyY2gtdG9vbDwvdGV4dD4KICAgIDwvc3ZnPg==",
-    "entryPointComponent": "`${defaultPageName}`",
+    "entryPointComponent": "research-tool-landing-page",
     "description": "Replace this placeholder with a proper description",
     "componentsDirPath": "web-components",
     "dependencies": [],
     "components": [
         {
-            "name": "`${defaultPageName}`",
+            "name": "research-tool-landing-page",
             "presenterClassName": "DefaultPresenter",
             "type": "pages"
         }
