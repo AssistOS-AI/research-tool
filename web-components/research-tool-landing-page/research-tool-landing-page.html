@@ -1,10 +1,50 @@
 <div class="main-container">
     <div class="content-card">
-        <div class="header">
-            <h1>research-tool</h1>
+        <h1>Research Assistant</h1>
+        <hr class="line-separator">
+        <div class="tabs-section pointer">
+            <span class="tab $$researchTab" data-local-action="changeTab researchTab" style="display: inline!important;">Research workspace</span>
+            <span class="tab $$settingsTab" data-local-action="changeTab settingsTab" style="display: inline!important;">Settings</span>
         </div>
-        <div class="content">
-            start your work...
+        <hr class="line-separator">
+        <div class="tab-content">
+            <div id="researchTab" class="visible-tab">
+                <div class="header">
+                    <p>Give me a research challenge. I can help you explore different research ares with ease.</p>
+                    <button id="researchButton" data-local-action="openResearchDialog">
+                        Start Research
+                    </button>
+                </div>
+                <hr class="divider" />
+                <div class="content">
+                    <h2>Recent researches</h2>
+                    <div class="recent-research-container">
+                        $$tableRows
+                    </div>
+                </div>
+            </div>
+            <div id="settingsTab" style="display: none;">
+                <form id="settingsForm" class="form-content">
+                    <div class="form-group">
+                        <label for="firecrawlerapikey">FireCrawler APIKey</label>
+                        <div class="input-wrapper">
+                            <input id="firecrawlerapikey" type="password" />
+                            <div class="input-info">The web crawler for now is FireCrawler. So APIKey is mandatory to be set before start using the Research Tool. </div>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="primary-button" id="saveSettings">
+                            <span class="button-icon">📝</span>
+                            Save
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>
+
+
+
+<!--
+-->

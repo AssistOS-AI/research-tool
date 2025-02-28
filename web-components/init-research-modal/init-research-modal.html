@@ -1,0 +1,48 @@
+<div class="modal-overlay">
+    <div class="modal-content">
+        <button type="button" data-local-action="closeModal" class="close-button">&times;</button>
+        <h1>
+            Let's do a research
+        </h1>
+        <form id="researchForm" class="form-content">
+            <div class="form-group">
+                <label for="personality">Select Personality</label>
+                <div class="input-wrapper">
+                    <select id="personality" name="personality" required>
+                        $$personalityOptions
+                    </select>
+                    <div class="input-info">Choose a personality to do the research</div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Choose a subject that you need to research</label>
+                <div class="input-wrapper">
+                    <div>
+                        <label>Topic</label>
+                        <input id="researchTopic" name="researchTopic" type="text" placeholder="e.g. federated learning"/>
+                    </div>
+                    <div class="input-info">Choose one research topic that presents interest for you.</div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Target content type</label>
+                <div class="input-wrapper">
+                    <select id="content-type" name="contentType" required>
+                        <option value="">Select content type...</option>
+                        $$contentTypeOptions
+                    </select>
+                    <div class="input-info">Choose an content type to be used as starting point of the research</div>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="primary-button" id="initResearch">
+                    <span class="button-icon">📝</span>
+                    Let's start
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

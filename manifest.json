@@ -11,6 +11,16 @@
             "name": "research-tool-landing-page",
             "presenterClassName": "DefaultPresenter",
             "type": "pages"
+        },
+        {
+            "name": "init-research-modal",
+            "presenterClassName": "InitResearchModal",
+            "type": "modal"
+        },
+        {
+            "name": "clarifying-questions-modal",
+            "presenterClassName": "ClarifyingQuestionsModal",
+            "type": "modal"
         }
     ],
     "services": [
