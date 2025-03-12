@@ -25,15 +25,17 @@ export class ClarifyingQuestionsModal {
 
     async beforeRender() {
         try {
-            this.questionsToRender = this.questions.map((question, index) => {
-                return `<div class="form-group">
+            this.questionsToRender = "";
+            for(let index in this.questions){
+                let question = this.questions[index];
+                this.questionsToRender +=`<div class="form-group">
                             <label for="question${index}">${question}</label>
                             <div class="input-wrapper">
                                 <input type="text" name="${index}" required>
                                 <div class="input-info">Provide a clear and concise answer</div>
                             </div>
                         </div>`;
-            });
+            }
         } catch (error) {
             console.error('Error loading data:', error);
         }
