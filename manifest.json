@@ -21,6 +21,11 @@
             "name": "clarifying-questions-modal",
             "presenterClassName": "ClarifyingQuestionsModal",
             "type": "modal"
+        },
+        {
+            "name": "validate-urls-modal",
+            "presenterClassName": "ValidateUrlsModal",
+            "type": "modal"
         }
     ],
     "services": [

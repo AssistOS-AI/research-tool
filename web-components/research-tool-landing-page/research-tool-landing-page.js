@@ -10,22 +10,32 @@ export class DefaultPresenter {
     }
 
     async beforeRender() {
-
+        try{
+            this.firecrawlerapikey = await fetch(`${window.location.protocol}//${window.location.host}/getSSOSecret/Demiurge`,
+                {
+                    method: "GET",
+                    headers: {"user-id": assistOS.space.id}
+                }
+            )
+            this.firecrawlerapikey = await this.firecrawlerapikey.text();
+        }catch (e){
+            console.error(e);
+        }
     }
 
     async afterRender() {
     }
 
-    async changeTab(tabButton, tabName){
+    async changeTab(tabButton, tabName) {
         const currentTab = this.element.querySelector(".visible-tab");
         currentTab.classList.remove("visible-tab");
         currentTab.style.display = "none";
-        const tab = await this.element.querySelector("#"+tabName);
+        const tab = await this.element.querySelector("#" + tabName);
         tab.classList.add("visible-tab");
         tab.style.display = "block";
     }
 
-    async openResearchDialog(){
+    async openResearchDialog() {
         const result = await assistOS.UI.showModal("init-research-modal", {
             "presenter": "init-research-modal"
         }, true);
@@ -58,7 +68,7 @@ export class DefaultPresenter {
         this.obtainBibliografy();
     }
 
-    async getPersonalityObject(){
+    async getPersonalityObject() {
         const personalityModule = await require('assistos').loadModule("personality", {});
 
         const personality = await personalityModule.getPersonality(assistOS.space.id, this.research.personality);
@@ -73,7 +83,7 @@ export class DefaultPresenter {
         return personalityObj;
     }
 
-    async getClarifyingQuestions(input){
+    async getClarifyingQuestions(input) {
         let loaderId = assistOS.UI.showLoading();
         const personalityObj = await this.getPersonalityObject();
         const llmModule = await require('assistos').loadModule("llm", {});
@@ -91,48 +101,81 @@ export class DefaultPresenter {
         return questions;
     }
 
-    getFireCrawlerApiKey(){
+    getFireCrawlerApiKey() {
         let firecrawlerapikey = this.element.querySelector("#firecrawlerapikey");
         return firecrawlerapikey.value;
     }
 
-    async obtainBibliografy(){
+    async obtainBibliografy() {
         let loaderId = assistOS.UI.showLoading();
         const personalityObj = await this.getPersonalityObject();
         const llmModule = await require('assistos').loadModule("llm", {});
 
-        const { queries } = this.research;
+        const {queries} = this.research;
         let bibliographyUrls = [];
-        let bibliographySummaries = [];
+        //let bibliographySummaries = [];
         let fireCrawler = Web.getFireCrawlerInstance(this.getFireCrawlerApiKey(), console);
-        for(let query of queries){
-            let prompt = `You are a research assistant. Generate a web query base on a clarifying question and it's answer.`+
+        for (let query of queries) {
+            let prompt = `You are a research assistant. Generate a web query base on a clarifying question and it's answer.` +
                 `Generate exactly one web query to search for the target content type ${this.research.contentType} by extracting relevant info from the following: ${query}. Do not add any extra details in your response.`;
 
             let webQuery = await llmModule.generateText(assistOS.space.id, prompt, personalityObj.id);
             webQuery = webQuery.message;
             let urls = await fireCrawler.search(webQuery, this.research.contentType);
             bibliographyUrls = bibliographyUrls.concat(urls, bibliographyUrls);
-            for(let url of urls){
+            /*for(let url of urls){
                 let content = await fireCrawler.scrape(url);
                 content = await this.summariseBibliography(content);
                 content = content.message;
                 bibliographySummaries.push(content);
-            }
+            }*/
         }
 
         this.research.bibliographyUrls = bibliographyUrls;
+        /*this.research.bibliographySummaries = bibliographySummaries;*/
+        assistOS.UI.hideLoading(loaderId);
+        /*this.generateReport();*/
+        this.validateBibliography();
+    }
+
+    async validateBibliography() {
+        let urls = "";
+
+        for (let url of this.research.bibliographyUrls) {
+            urls += url + "|-|";
+        }
+
+        let responseUrls = await assistOS.UI.showModal("validate-urls-modal", {
+            "presenter": "validate-urls-modal",
+            "urls": urls
+        }, true);
+
+        let newUrls = [];
+        for (let index of Object.keys(responseUrls.urls)) {
+            newUrls.push(responseUrls.urls[index]);
+        }
+        this.research.bibliographyUrls = newUrls;
+
+        let loaderId = assistOS.UI.showLoading();
+        let fireCrawler = Web.getFireCrawlerInstance(this.getFireCrawlerApiKey(), console);
+        let bibliographySummaries = [];
+        for (let url of newUrls) {
+            let content = await fireCrawler.scrape(url);
+            content = await this.summariseBibliography(content);
+            content = content.message;
+            bibliographySummaries.push(content);
+        }
         this.research.bibliographySummaries = bibliographySummaries;
         assistOS.UI.hideLoading(loaderId);
         this.generateReport();
     }
 
-    async generateReport(){
+    async generateReport() {
         let loaderId = assistOS.UI.showLoading();
         const personalityObj = await this.getPersonalityObject();
         const llmModule = await require('assistos').loadModule("llm", {});
 
-        let prompt = `You are a research assistant. Combine the following summaries into a cohesive and well-structured research report. If possible generate one table per chapter. Summaries: ${this.research.bibliographySummaries}` ;
+        let prompt = `You are a research assistant. Combine the following summaries into a cohesive and well-structured research report. If possible generate one table per chapter. Summaries: ${this.research.bibliographySummaries}`;
         let report = await llmModule.generateText(assistOS.space.id, prompt, personalityObj.id);
 
         this.research.report = report.message;
@@ -140,7 +183,7 @@ export class DefaultPresenter {
         this.createDocumentForReport();
     }
 
-    async createDocumentForReport(){
+    async createDocumentForReport() {
         let loaderId = assistOS.UI.showLoading();
         const documentModule = await require('assistos').loadModule("document", {});
         const personalityObj = await this.getPersonalityObject();
@@ -186,7 +229,7 @@ export class DefaultPresenter {
             commands: {}
         };
 
-        for(let url of this.research.bibliographyUrls){
+        for (let url of this.research.bibliographyUrls) {
             bibliography.text += url + "\n";
         }
 
@@ -196,14 +239,32 @@ export class DefaultPresenter {
         console.log('Creating research document done!', documentId);
     }
 
-    async summariseBibliography(content, charactersLimit = 1000){
+    async summariseBibliography(content, charactersLimit = 1000) {
         const personalityObj = await this.getPersonalityObject();
         const llmModule = await require('assistos').loadModule("llm", {});
 
-        let prompt = `You are a research assistant. Summarize the following content and extract key insights. Content: ${content}. Limit to ${charactersLimit} characters.` ;
+        let prompt = `You are a research assistant. Summarize the following content and extract key insights. Content: ${content}. Limit to ${charactersLimit} characters.`;
 
         let summary = await llmModule.generateText(assistOS.space.id, prompt, personalityObj.id);
 
         return summary;
+    }
+
+    async saveSettings() {
+        const input = this.element.querySelector("#firecrawlerapikey");
+        let firecrawlerapikey = input.value;
+        if (firecrawlerapikey) {
+            try {
+                await fetch(`${window.location.protocol}//${window.location.host}/putSSOSecret/Demiurge`,
+                    {
+                        method: "PUT",
+                        body: JSON.stringify({secret: firecrawlerapikey}),
+                        headers: {"user-id": assistOS.space.id}
+                    }
+                )
+            } catch (err) {
+                console.log(err);
+            }
+        }
     }
 }

@@ -28,12 +28,12 @@
                     <div class="form-group">
                         <label for="firecrawlerapikey">FireCrawler APIKey</label>
                         <div class="input-wrapper">
-                            <input id="firecrawlerapikey" type="password" />
+                            <input id="firecrawlerapikey" type="password" value="$$firecrawlerapikey"/>
                             <div class="input-info">The web crawler for now is FireCrawler. So APIKey is mandatory to be set before start using the Research Tool. </div>
                         </div>
                     </div>
                     <div class="form-actions">
-                        <button type="submit" class="primary-button" id="saveSettings">
+                        <button type="submit" class="primary-button" data-local-action="saveSettings" id="saveSettings">
                             <span class="button-icon">📝</span>
                             Save
                         </button>
