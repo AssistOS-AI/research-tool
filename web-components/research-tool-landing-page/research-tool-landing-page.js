@@ -230,7 +230,9 @@ export class DefaultPresenter {
         };
 
         for (let url of this.research.bibliographyUrls) {
-            bibliography.text += url + "\n";
+            if(typeof url !== "undefined"){
+                bibliography.text += url + "\n";
+            }
         }
 
         await documentModule.addParagraph(assistOS.space.id, documentId, bibliographyChapterId, bibliography);
