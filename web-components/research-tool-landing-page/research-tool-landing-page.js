@@ -27,10 +27,12 @@ export class DefaultPresenter {
     }
 
     async changeTab(tabButton, tabName) {
+        this.element.querySelector(".active").classList.remove("active");
+        tabButton.classList.add('active');
         const currentTab = this.element.querySelector(".visible-tab");
         currentTab.classList.remove("visible-tab");
         currentTab.style.display = "none";
-        const tab = await this.element.querySelector("#" + tabName);
+        const tab = this.element.querySelector("#" + tabName);
         tab.classList.add("visible-tab");
         tab.style.display = "block";
     }
